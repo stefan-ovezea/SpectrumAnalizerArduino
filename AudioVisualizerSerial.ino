@@ -42,7 +42,7 @@ void loop() {
           if (Serial.read() != '\n')
             incomingData[COLUMNS - 1 - i] = Serial.parseInt();
         }
-        Serial.print("End:" + Serial.read());
+//        Serial.print("End:" + Serial.read());
 
 //        for (int i = 0; i < COLUMNS; i++) {
 //          Serial.print(incomingData[i] + ", ");
@@ -51,7 +51,7 @@ void loop() {
 //        if (Serial.read() == -1)
         for (int i = 0; i < COLUMNS; i++) {
             if (i % 2 == 0) {
-              for (int j = singleRow[i]; j < singleRow[i] + 7; j++) {
+              for (int j = singleRow[i]; j < singleRow[i] + (ROWS - 1); j++) {
                 if (j < singleRow[i] + incomingData[i])
                   leds[spectrumRepresentation[j]] = CRGB::Red;
                 else {
@@ -59,7 +59,7 @@ void loop() {
                 }
               }
             } else {
-              for (int j = singleRow[i]; j > singleRow[i] - 7; j--) {
+              for (int j = singleRow[i]; j > singleRow[i] - (ROWS - 1); j--) {
                 if (j > singleRow[i] - incomingData[i])
                   leds[spectrumRepresentation[j]] = CRGB::Red;
                 else {
