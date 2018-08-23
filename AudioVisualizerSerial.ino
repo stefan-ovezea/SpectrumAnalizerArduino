@@ -29,7 +29,6 @@ void setup() {
     else
       singleRow[i] = singleRow[i - 1] + 1;
   }
-  singleRow;
 
   for (int i = 0; i < NUM_LEDS; i++) {
     spectrumRepresentation[i] = i;
@@ -37,11 +36,13 @@ void setup() {
 }
 
 void loop() {
-  if (Serial.available() >= COLUMNS) {
-    int status = Serial.readBytes(incomingData, COLUMNS);    
-    
-    if (status == COLUMNS)
+  if (Serial.available() <= 0) {
+    int status = Serial.readBytes(incomingData, COLUMNS);
+    Serial.read();  
+    if (status == COLUMNS) {
       turnLedsOn();
+    }
+      
   }
   FastLED.show();
 }
@@ -49,7 +50,7 @@ void loop() {
 void turnLedsOn() {
   for (int i = 0; i < COLUMNS; i++) {
     if (i % 2 == 0) {
-      for (int j = singleRow[i]; j < singleRow[i] + (ROWS - 1); j++) {
+      for (int j = singleRow[i]; j < singleRow[i] + (ROWS); j++) {
         if (j < singleRow[i] + incomingData[i])
           leds[spectrumRepresentation[j]] = CRGB::Red;
         else {
@@ -57,7 +58,7 @@ void turnLedsOn() {
         }
       }
     } else {
-      for (int j = singleRow[i]; j > singleRow[i] - (ROWS - 1); j--) {
+      for (int j = singleRow[i]; j > singleRow[i] - (ROWS); j--) {
         if (j > singleRow[i] - incomingData[i])
           leds[spectrumRepresentation[j]] = CRGB::Red;
         else {
@@ -66,4 +67,11 @@ void turnLedsOn() {
       }
     }
   }
+}
+
+void debugPrint() {
+  for (int i = 0; i < COLUMNS; i++) {
+    Serial.print(incomingData[i]);
+  }
+  Serial.println("");
 }
